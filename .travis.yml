@@ -1,0 +1,31 @@
+sudo: required
+
+language: generic
+
+# Install the docker
+services:
+    - docker
+
+# Build an image from Dockerfile.dev
+before_install:
+    - docker build -t rohitsharma120582/react-test -f ./client/Dockerfile.dev ./client
+
+# Spin up the container and run the test
+script:
+    - docker run -e CI=true rohitsharma120582/react-test npm run test -- --coverage
+
+after_success:
+    # Build the production images
+    - docker build -t rohitsharma120582/docker-multi-containers-client ./client
+    - docker build -t rohitsharma120582/docker-multi-containers-nginx ./nginx
+    - docker build -t rohitsharma120582/docker-multi-containers-server ./server
+    - docker build -t rohitsharma120582/docker-multi-containers-worker ./worker
+
+    # Log in to the Docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+    # Push the images to Docker Hub
+    - docker push rohitsharma120582/docker-multi-containers-client
+    - docker push rohitsharma120582/docker-multi-containers-nginx
+    - docker push rohitsharma120582/docker-multi-containers-server
+    - docker push rohitsharma120582/docker-multi-containers-worker
