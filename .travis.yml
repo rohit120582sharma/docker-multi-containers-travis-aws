@@ -29,3 +29,17 @@ after_success:
     - docker push rohitsharma120582/docker-multi-containers-nginx
     - docker push rohitsharma120582/docker-multi-containers-server
     - docker push rohitsharma120582/docker-multi-containers-worker
+
+# Configure the deployment to AWS Elastic bean
+deploy:
+    edge: true
+    provider: elasticbeanstalk
+    region: us-east-2
+    app: docker-multi-containers-travis-aws
+    env: DockerMultiContainersTravisAws-env
+    bucket_name: elasticbeanstalk-us-east-2-815199371135
+    bucket_path: docker-multi-containers-build
+    on:
+        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY

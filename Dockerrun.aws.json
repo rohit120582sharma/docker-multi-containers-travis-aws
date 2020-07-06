@@ -1,0 +1,41 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "name": "client",
+            "hostname": "client",
+            "image": "rohitsharma120582/docker-multi-containers-client",
+            "memory": 128,
+            "essential": false
+        },
+        {
+            "name": "server",
+            "hostname": "api",
+            "image": "rohitsharma120582/docker-multi-containers-server",
+            "memory": 128,
+            "essential": false
+        },
+        {
+            "name": "worker",
+            "image": "rohitsharma120582/docker-multi-containers-worker",
+            "memory": 128,
+            "essential": false
+        },
+        {
+            "name": "nginx",
+            "image": "rohitsharma120582/docker-multi-containers-nginx",
+            "memory": 128,
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ],
+            "links": [
+                "client",
+                "server"
+            ]
+        }
+    ]
+}
